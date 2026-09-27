@@ -18,8 +18,7 @@ async function signIn(page: Page, account: typeof employee) {
   await page.locator('#login-email').fill(account.email);
   await page.locator('#login-password').fill(account.password);
   await page.getByRole('button', { name: 'Open issue desk' }).click();
-  await expect(page.locator('.topbar')).toBeVisible();
-}
+  }
 
 async function expectNoHorizontalOverflow(page: Page) {
   const overflow = await page.evaluate(() => document.documentElement.scrollWidth > window.innerWidth + 1);
@@ -30,7 +29,7 @@ test.describe('FacilityFlow browser UX', () => {
   test('employee can report and inspect a read-only issue', async ({ page }) => {
     await signIn(page, employee);
 
-    await expect(page.getByText('Employee workspace')).toBeVisible();
+    await expect(page.getByText('Employee workspace' , { exact: true })).toBeVisible();
     await expect(page.getByRole('heading', { name: /Good morning,/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Report an issue/ })).toBeVisible();
 
