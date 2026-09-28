@@ -1,36 +1,48 @@
 # FacilityFlow
 
-FacilityFlow is a local demonstration issue desk for workplace facility operations. Employees report issues into a shared queue; Facility Administrators categorize, assign, resolve, and close them through a guarded lifecycle.
+FacilityFlow is an Office Facility Issue Tracker that gives employees a simple way to report and follow workplace facility issues while giving Facility Administrators a controlled workspace to categorize, prioritize, assign, resolve, and close those issues.
 
-## Run Locally
+The project was developed using a **Spec-Driven Development** workflow with GitHub Spec-Kit and GitHub Copilot, with requirements, design decisions, contracts, validation criteria, and implementation tasks maintained alongside the application.
+
+## Problem
+
+Workplace facility issues can become difficult to track when requests are handled through disconnected conversations or informal channels. FacilityFlow provides a shared issue desk with clear ownership, status visibility, role-based access, and a controlled issue lifecycle.
+
+## Solution
+
+FacilityFlow provides two dedicated workspaces.
+
+### Employee Workspace
+
+Employees can:
+
+- Authenticate using a provisioned employee account.
+- View the shared issue list and issue details.
+- Create a new facility issue.
+- Select the initial category and priority.
+- Follow the current issue status.
+
+After submission, employee issue details are read-only. Employees cannot assign, resolve, close, or otherwise modify restricted issue fields.
+
+The employee workspace provides a contextual greeting and a conversational **Report an issue** flow.
+
+### Facility Administrator Workspace
+
+Facility Administrators can:
+
+- View the complete operational issue queue.
+- Search and filter issues.
+- Categorize and prioritize issues.
+- Assign issues to Facility Administrators or leave them unassigned.
+- Manage the issue lifecycle.
+- Record resolution information.
+- Resolve and close issues according to the defined lifecycle rules.
+
+The administrator workspace uses progressive disclosure so operational controls remain focused on the task being performed.
+
+## Issue Lifecycle
+
+The supported lifecycle is:
 
 ```text
-npm install
-npm run seed
-npm start
-```
-
-Open `http://localhost:3000`.
-
-Use the complete provisioned company email and select the matching role on the login page. Employee demo records use the configurable `FACILITYFLOW_EMPLOYEE_EMAIL_DOMAIN` boundary, defaulting to reserved `company.example`; this represents a future corporate SSO/Entra ID integration and is not a real company authentication check. Administrator demo records remain on `facilityflow.demo`. Credential hashes are supplied by the local environment; administrator credentials are never displayed in the UI or returned by the API. All accounts and data are fictional.
-
-## Verify
-
-```text
-npm test
-npm run build
-```
-
-The test suite covers the 104-account/40-issue seed invariants, deterministic demo data, bearer-token login, employee restrictions, administrator lifecycle actions, assignee validation, and the employee-to-administrator demo flow.
-
-The frontend also provides distinct Employee and Facility Administrator workspaces. Employees get a contextual greeting, a conversational `Report an issue` flow, and read-only issue progress. Administrators get an operational queue with search/filtering and progressively disclosed lifecycle controls. The UX contract and browser/manual acceptance scenarios are documented in `specs/001-facility-issue-tracker/contracts/ux.md` and `specs/001-facility-issue-tracker/quickstart.md`.
-
-The automated UX contract checks run with `npm test`; desktop/mobile viewport, keyboard, contrast, and reduced-motion checks are additionally covered by the quickstart scenarios.
-
-## API Notes
-
-- `POST /api/auth/login` accepts a provisioned email, explicit role selection, and role-specific demo credential.
-- Authenticated requests use the returned bearer token.
-- `GET /api/issues` and `GET /api/issues/:id` are shared read views.
-- `POST /api/issues` is employee-only and derives the reporter from the authenticated identity.
-- `PATCH /api/issues/:id` is administrator-only and enforces lifecycle and assignee rules.
+Open → In Progress → Resolved → Closed
